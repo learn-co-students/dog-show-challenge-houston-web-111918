@@ -10,18 +10,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
      let dogs = [];
 
+     function getData(){
      fetch('http://localhost:3000/dogs')
           .then(res => res.json())
           .then(res => {
                dogs = res
                render()
           })
-         
+     }
 
      let body = document.querySelector('#table-body')
     let form = document.querySelector('#dog-form')
 
      function render(){
+          body.innerHTML = ''
           dogs.forEach( dog => {
                let tr = document.createElement('tr')
                let td1 = document.createElement('td')
@@ -54,6 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
                // console.log(form.name.value ,form.breed.value,
                //      form.sex.value )
                e.preventDefault() //stops refresh
+               currentDog.name = form.name.value
+               currentDog.breed = form.breed.value
+               currentDog.sex = form.sex.value
                fetch(`http://localhost:3000/dogs/${currentDog.id}`, {
                     method: 'PATCH',
                     headers: {
@@ -61,10 +66,15 @@ document.addEventListener('DOMContentLoaded', () => {
                      },
                      body: JSON.stringify(currentDog)
                })
+                    .then(getData)
+
+             
           }
           )
-          
+
+
+       
           
      }
-
+     getData();   
 })
